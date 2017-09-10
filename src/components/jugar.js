@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
+import { merge } from 'lodash';
 
 import Fecha from './fecha';
 
@@ -9,16 +10,42 @@ class Jugar extends Component {
     super(props);
 
     this.state = {
-      error: ''
+      error: '',
+      fechas: []
     };
   }
 
   componentDidMount() {
     this.props.getFechas();
+    this.props.userInfo();
+  }
+
+  componentWillUpdate() {
+    const systemFechas = this.props.fechas;
+    const userFechas = this.props.user && this.props.user.fechas;
+
+    // const newFechas = merge(userFechas, systemFechas);
+    const newFechas = systemFechas.map(systemFecha => {
+      systemFecha.games.forEach(game => {
+        game.goalsHome = '';
+        game.goalsAway = '';
+      });
+      const fechaInBoth = userFechas && userFechas.find(userFecha => userFecha.number === systemFecha.number);
+      return fechaInBoth || systemFecha;
+    });
+    this.setState({fechas: newFechas});
   }
 
   handleChangeGoals(params) {
-    this.props.changeGoals(params);
+    const changingFecha = this.state.fechas.find(fecha => fecha.number === params.fechaNumber);
+    const changingGame = changingFecha.games.find(game => game.number === params.juegoNumber);
+    changingGame.goalsHome = params.goalsHome;
+    changingGame.goalsAway = params.goalsAway;
+    // const modified = [...changingFecha.games, ...changingGame];
+    changingFecha.games = [...changingFecha.games, ...changingGame];
+    const fechas = [...this.state.fechas, ...changingFecha];
+
+    this.props.changePlayerGoals({fechas: fechas, username: this.props.user.username });
   }
 
   renderError() {
@@ -29,7 +56,8 @@ class Jugar extends Component {
   }
 
   render() {
-    const fechas = this.props.fechas.map(fecha => <Fecha key={fecha.number} fecha={fecha} changeGoals={this.handleChangeGoals.bind(this)} />);
+    // const fechas = this.props.fechas.map(fecha => <Fecha key={fecha.number} fecha={fecha} changeGoals={this.handleChangeGoals.bind(this)} />);
+    const fechas = this.state.fechas.map(fecha => <Fecha key={fecha.number} fecha={fecha} changeGoals={this.handleChangeGoals.bind(this)} />);
 
     return (
       <div>
@@ -42,7 +70,8 @@ class Jugar extends Component {
 
 function mapStateToProps(state) {
   return {
-    fechas: state.fechas
+    fechas: state.fechas,
+    user: state.auth.user
   }
 }
 

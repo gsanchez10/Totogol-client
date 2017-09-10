@@ -11,11 +11,28 @@ export function signinUser({ email, password }) {
 			.then(response => {
 				// If request is good...
 				// - Update state to indicate user is authenticated
-				dispatch({ type: AUTH_USER });
+				dispatch({ type: AUTH_USER, payload: response });
 				// - Save the JWT token
 				localStorage.setItem('token', response.data.token);
 				// - redirect to the route '/feature'
 				browserHistory.push('/editor');
+			})
+			.catch(() => {
+				// If request is bad...
+				// - Show an arror to the user
+				dispatch(authError('Correo o contraseña incorrecto.'));
+			})
+	}
+}
+
+export function userInfo() {
+	return function(dispatch) {
+		axios.get(`${ROOT_URL}/userInfo`, { headers: { 'authorization': localStorage.getItem('token') }})
+			// Submit email/password to the server
+			.then(response => {
+				// If request is good...
+				// - Update state to indicate user is authenticated
+				dispatch({ type: AUTH_USER, payload: response });
 			})
 			.catch(() => {
 				// If request is bad...
@@ -166,6 +183,22 @@ export function deleteFecha(params) {
 			.then(response => {
 				// If request is good...
 				dispatch({ type: 'DELETE_FECHA', payload: params });
+			})
+			.catch(() => {
+				// If request is bad...
+				// - Show an arror to the user
+				// dispatch(authError('Error obteniendo paquetes.'));
+			})
+	}
+}
+
+export function changePlayerGoals(fechas) {
+	return function(dispatch) {
+		axios.post(`${ROOT_URL}/changePlayerGoals`, fechas, { headers: { 'authorization': localStorage.getItem('token') }})
+			// Submit email/password to the server
+			.then(response => {
+				// If request is good...
+				dispatch({ type: 'PLAYER_GOALS_CHANGE', payload: response });
 			})
 			.catch(() => {
 				// If request is bad...

@@ -7,11 +7,13 @@ import {
 export default function(state = {}, action) {
 	switch(action.type) {
 		case AUTH_USER:
-			return { ...state, authenticated: true };
+			return { ...state, user: action.payload && action.payload.data.user, authenticated: true };
 		case UNAUTH_USER:
-			return { ...state, authenticated: false };
+			return { ...state, user: null, authenticated: false };
 		case AUTH_ERROR:
 			return { ...state, error: action.payload };
+		case'PLAYER_GOALS_CHANGE':
+			return { ...state, user: action.payload.data.user }
 	}
 
 	return state;

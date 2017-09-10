@@ -12,6 +12,7 @@ import Signin from './components/auth/signin';
 import Signup from './components/auth/signup';
 import Jugar from './components/jugar';
 import reducers from './reducers';
+import * as actions from './actions';
 
 import { AUTH_USER } from './actions/types';
 

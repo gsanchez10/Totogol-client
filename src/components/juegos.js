@@ -18,23 +18,24 @@ class Juego extends Component {
   }
 
   render() {
+    const { goalsHome, goalsAway } = this.props.juego;
     const options = this.props.administrar && <button className="options" onClick={this.deleteJuego.bind(this)}><i className="fa fa-times" aria-hidden="true"></i></button>;
-    const goalsHome = !this.props.administrar &&
+    const goalsHomeInput = !this.props.administrar &&
     this.props.cerrada &&
-    <input type="number" ref="goalsHome" className="goalsInput" min="0" value={this.props.juego.goalsHome} disabled /> ||
-    <input type="number" ref="goalsHome" className="goalsInput" min="0" value={this.props.juego.goalsHome} onChange={this.changeGoals.bind(this)} />;
+    <input type="number" ref="goalsHome" className="goalsInput" min="0" value={goalsHome} disabled /> ||
+    <input type="number" ref="goalsHome" className="goalsInput" min="0" value={goalsHome} onChange={this.changeGoals.bind(this)} />;
     
-    const goalsAway = !this.props.administrar &&
+    const goalsAwayInput = !this.props.administrar &&
     this.props.cerrada &&
-    <input type="number" ref="goalsAway" className="goalsInput" min="0" value={this.props.juego.goalsAway} disabled /> ||
-    <input type="number" ref="goalsAway" className="goalsInput" min="0" value={this.props.juego.goalsAway} onChange={this.changeGoals.bind(this)} />;
+    <input type="number" ref="goalsAway" className="goalsInput" min="0" value={goalsAway} disabled /> ||
+    <input type="number" ref="goalsAway" className="goalsInput" min="0" value={goalsAway} onChange={this.changeGoals.bind(this)} />;
     return (
       <div className="juego">
         <span className="homeTeamName">
           {this.props.juego.homeTeam}&nbsp;
-          {goalsHome}
+          {goalsHomeInput}
         </span>  vs  <span className="awayTeamName">
-          {goalsAway}
+          {goalsAwayInput}
           &nbsp;{this.props.juego.awayTeam}
         </span>
         {options}
