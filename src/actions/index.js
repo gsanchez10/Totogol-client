@@ -15,7 +15,7 @@ export function signinUser({ username, password }) {
 				// - Save the JWT token
 				localStorage.setItem('token', response.data.token);
 				// - redirect to the route '/feature'
-				browserHistory.push('/editor');
+				browserHistory.push('/jugar');
 			})
 			.catch(() => {
 				// If request is bad...
@@ -62,7 +62,7 @@ export function signupUser({ email, password }) {
 				// - Save the JWT token
 				localStorage.setItem('token', response.data.token);
 				// - redirect to the route '/feature'
-				browserHistory.push('/editor');
+				browserHistory.push('/jugar');
 			})
 			.catch(() => {
 				// If request is bad...

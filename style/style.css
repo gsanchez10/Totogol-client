@@ -13,6 +13,12 @@ input {
   color: #000;
 }
 
+.profile {
+  float: right;
+  color: #fff;
+  padding: 1rem;
+}
+
 .navbar-default {
   margin-bottom: 0;
 }
@@ -121,4 +127,12 @@ footer {
 
 .agregarFecha > div {
   margin: 5px 0;
+}
+
+.cuenta ul {
+  padding: 0;
+}
+
+.cuenta ul li {
+  list-style: none;
 }

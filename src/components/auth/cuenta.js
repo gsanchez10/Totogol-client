@@ -30,9 +30,16 @@ class Cuenta extends Component {
   }
 
   render() {
+    const userInfo = this.props.user && (
+      <ul>
+        <li><strong>Usuario:</strong> {this.props.user.username}</li>
+        <li><strong>Correo:</strong> {this.props.user.email}</li>
+      </ul>
+    );
     return (
-      <div>
+      <div className="cuenta">
         <h1>Cuenta</h1>
+        {userInfo}
         <form onSubmit={this.handleCambiarContrasena.bind(this)}>
           <fieldset className="form-group">
             <label>Cambiar contraseña:</label>

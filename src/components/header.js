@@ -6,6 +6,10 @@ import * as actions from '../actions';
 
 
 class Header extends Component {
+	componentDidMount() {
+    this.props.userInfo();
+  }
+
 	signoutUser() {
 		this.props.signoutUser();
 	}
@@ -16,11 +20,12 @@ class Header extends Component {
 
 	renderLinks() {
 		if(this.props.isAuthenticated) {
+			const editor = this.props.user && this.props.user.canAdmin && <li className="nav-item">
+						<Link to="/editor" className={classnames({ 'nav-active': location.pathname === '/editor' })}>Editor</Link>
+					</li>;
 			return (
 				<ul className="nav navbar-nav toto-nav">
-					<li className="nav-item">
-						<Link to="/editor" className={classnames({ 'nav-active': location.pathname === '/editor' })}>Editor</Link>
-					</li>
+					{editor}
 					<li className="nav-item">
 						<Link to="/jugar" className={classnames({ 'nav-active': location.pathname === '/jugar' })}>Jugar</Link>
 					</li>
@@ -57,6 +62,9 @@ class Header extends Component {
 				    <div className="navbar-header">
 							<a className="navbar-brand" href="#">TOTOGOL</a>
 						</div>
+						<div className="profile">
+							{this.props.user && this.props.user.username}
+						</div>
 					</nav>
 					{this.renderLinks()}
 				</nav>
@@ -66,7 +74,10 @@ class Header extends Component {
 }
 
 function mapStateToProps(state) {
-	return { isAuthenticated: state.auth.authenticated };
+	return { 
+		isAuthenticated: state.auth.authenticated,
+		user: state.auth.user
+	};
 }
 
 export default connect(mapStateToProps, actions)(Header);
