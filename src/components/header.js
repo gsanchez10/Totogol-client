@@ -24,7 +24,7 @@ class Header extends Component {
 						<Link to="/editor" className={classnames({ 'nav-active': location.pathname === '/editor' })}>Editor</Link>
 					</li>;
 			return (
-				<ul className="nav navbar-nav toto-nav">
+				<ul className="nav toto-nav">
 					{editor}
 					<li className="nav-item">
 						<Link to="/jugar" className={classnames({ 'nav-active': location.pathname === '/jugar' })}>Jugar</Link>
@@ -43,7 +43,7 @@ class Header extends Component {
 		}
 
 		return (
-			<ul className="nav navbar-nav toto-nav">
+			<ul className="nav toto-nav">
 				<li className="nav-item">
 					<Link to="/registrarse" className={classnames({ 'nav-active': location.pathname === '/registrarse' })}>Registrarse</Link>
 				</li>
