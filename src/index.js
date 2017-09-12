@@ -10,7 +10,9 @@ import Editor from './components/editor';
 import RequireAuth from './components/require_authentication';
 import Signin from './components/auth/signin';
 import Signup from './components/auth/signup';
+import Cuenta from './components/auth/cuenta';
 import Jugar from './components/jugar';
+import Resultados from './components/resultados';
 import reducers from './reducers';
 import * as actions from './actions';
 
@@ -32,6 +34,8 @@ ReactDOM.render(
         <Route path="/registrarse" component={Signup} />
   			<Route path="/editor" component={RequireAuth(Editor)}/>
         <Route path="/jugar" component={RequireAuth(Jugar)}/>
+        <Route path="/cuenta" component={RequireAuth(Cuenta)}/>
+        <Route path="/resultados" component={RequireAuth(Resultados)}/>
   		</Route>
   	</Router>
   </Provider>

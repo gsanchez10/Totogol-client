@@ -10,6 +10,10 @@ class Header extends Component {
 		this.props.signoutUser();
 	}
 
+	componentWillReceiveProps(nextProps) {
+		console.log(nextProps, 'nextProps');
+	}
+
 	renderLinks() {
 		if(this.props.isAuthenticated) {
 			return (

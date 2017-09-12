@@ -12,8 +12,10 @@ export default function(state = {}, action) {
 			return { ...state, user: null, authenticated: false };
 		case AUTH_ERROR:
 			return { ...state, error: action.payload };
-		case'PLAYER_GOALS_CHANGE':
+		case 'PLAYER_GOALS_CHANGE':
 			return { ...state, user: action.payload.data.user }
+		case 'PASSWORD_CHANGED':
+			return { ...state, passwordChangeResult: action.payload }
 	}
 
 	return state;

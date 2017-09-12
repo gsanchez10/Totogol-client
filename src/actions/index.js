@@ -4,9 +4,9 @@ import { AUTH_USER, AUTH_ERROR, GET_PACKS, UNAUTH_USER } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
 
-export function signinUser({ email, password }) {
+export function signinUser({ username, password }) {
 	return function(dispatch) {
-		axios.post(`${ROOT_URL}/signin`, { email, password })
+		axios.post(`${ROOT_URL}/signin`, { username, password })
 			// Submit email/password to the server
 			.then(response => {
 				// If request is good...
@@ -72,6 +72,25 @@ export function signupUser({ email, password }) {
 	}
 }
 
+export function changePassword({ username, password }) {
+	return function(dispatch) {
+		axios.post(`${ROOT_URL}/changePassword`, { username, password }, { headers: { 'authorization': localStorage.getItem('token') }})
+			// Submit email/password to the server
+			.then(response => {
+				// If request is good...
+				// - Update state to indicate user is authenticated
+				dispatch({ type: 'PASSWORD_CHANGED', payload: response.data.result });
+				// - Save the JWT token
+				localStorage.setItem('token', response.data.token);
+			})
+			.catch(() => {
+				// If request is bad...
+				// - Show an arror to the user
+				dispatch(authError('No se pudo cambiar.'));
+			})
+	}
+}
+
 export function authError(error) {
 	return {
 		type: AUTH_ERROR,
@@ -103,6 +122,22 @@ export function getFechas() {
 			.then(response => {
 				// If request is good...
 				dispatch({ type: 'GET_FECHAS', payload: response.data });
+			})
+			.catch(() => {
+				// If request is bad...
+				// - Show an arror to the user
+				// dispatch(authError('Error obteniendo paquetes.'));
+			})
+	}
+}
+
+export function getPlayers() {
+	return function(dispatch) {
+		axios.get(`${ROOT_URL}/getPlayers`, { headers: { 'authorization': localStorage.getItem('token') }})
+			// Submit email/password to the server
+			.then(response => {
+				// If request is good...
+				dispatch({ type: 'GET_PLAYERS', payload: response.data });
 			})
 			.catch(() => {
 				// If request is bad...

@@ -31,6 +31,13 @@ class Jugar extends Component {
         game.goalsAway = '';
       });
       const fechaInBoth = userFechas && userFechas.find(userFecha => userFecha.number === systemFecha.number);
+      const gamesMissingInFechaInBoth = fechaInBoth && systemFecha.games.filter(systemGame =>
+        !fechaInBoth.games.find(game => systemGame.number === game.number)
+      );
+      if(fechaInBoth) {
+        fechaInBoth.games = fechaInBoth.games && fechaInBoth.games.concat(gamesMissingInFechaInBoth) || gamesMissingInFechaInBoth;
+      }
+
       return fechaInBoth || systemFecha;
     });
     this.setState({fechas: newFechas});
