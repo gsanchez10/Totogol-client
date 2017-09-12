@@ -20,12 +20,46 @@ class Jugar extends Component {
     this.props.userInfo();
   }
 
-  componentWillUpdate() {
+  handleChangeGoals(params) {
+    /*const changingFecha = this.state.fechas.find(fecha => fecha.number === params.fechaNumber);
+    const changingGame = changingFecha.games.find(game => game.number === params.juegoNumber);
+    changingGame.goalsHome = params.goalsHome;
+    changingGame.goalsAway = params.goalsAway;
+    // const modified = [...changingFecha.games, ...changingGame];
+    changingFecha.games = [...changingFecha.games, ...changingGame];
+    const fechas = [...this.state.fechas, ...changingFecha];
+
+    this.props.changePlayerGoals({fechas: fechas, username: this.props.user.username });*/
+
+
+
+
+
+
+    const changingFecha = Object.assign({}, this.props.fechas.find(fecha => fecha.number === params.fechaNumber));
+    changingFecha.games.forEach(changedGame => {
+      if(changedGame.number === params.juegoNumber) {
+        changedGame.goalsHome = params.goalsHome;
+        changedGame.goalsAway = params.goalsAway;
+      }
+    });
+    const fechas = [...this.props.fechas, ...changingFecha];
+
+    this.props.changePlayerGoals({fechas: fechas, username: this.props.user.username });
+  }
+
+  renderError() {
+    if(this.state.error) {
+      return <div className="alert alert-danger">{this.state.error}</div>;
+    }
+    return null;
+  }
+
+  render() {
     const systemFechas = this.props.fechas;
     const userFechas = this.props.user && this.props.user.fechas;
 
-    // const newFechas = merge(userFechas, systemFechas);
-    const newFechas = systemFechas.map(systemFecha => {
+    const mergedFechas = systemFechas.map(systemFecha => {
       systemFecha.games.forEach(game => {
         game.goalsHome = '';
         game.goalsAway = '';
@@ -47,36 +81,12 @@ class Jugar extends Component {
 
       return fechaInBoth || systemFecha;
     });
-    this.setState({fechas: newFechas});
-  }
-
-  handleChangeGoals(params) {
-    const changingFecha = this.state.fechas.find(fecha => fecha.number === params.fechaNumber);
-    const changingGame = changingFecha.games.find(game => game.number === params.juegoNumber);
-    changingGame.goalsHome = params.goalsHome;
-    changingGame.goalsAway = params.goalsAway;
-    // const modified = [...changingFecha.games, ...changingGame];
-    changingFecha.games = [...changingFecha.games, ...changingGame];
-    const fechas = [...this.state.fechas, ...changingFecha];
-
-    this.props.changePlayerGoals({fechas: fechas, username: this.props.user.username });
-  }
-
-  renderError() {
-    if(this.state.error) {
-      return <div className="alert alert-danger">{this.state.error}</div>;
-    }
-    return null;
-  }
-
-  render() {
-    // const fechas = this.props.fechas.map(fecha => <Fecha key={fecha.number} fecha={fecha} changeGoals={this.handleChangeGoals.bind(this)} />);
-    const fechas = this.state.fechas.map(fecha => <Fecha key={fecha.number} fecha={fecha} changeGoals={this.handleChangeGoals.bind(this)} />);
+    const fechaComponents = mergedFechas.map(fecha => <Fecha key={fecha.number} fecha={fecha} changeGoals={this.handleChangeGoals.bind(this)} />);
 
     return (
       <div>
         <h1>Jugar</h1>
-        {fechas}
+        {fechaComponents}
       </div>
     );
   }
