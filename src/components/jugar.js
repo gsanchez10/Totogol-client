@@ -35,6 +35,13 @@ class Jugar extends Component {
         !fechaInBoth.games.find(game => systemGame.number === game.number)
       );
       if(fechaInBoth) {
+        fechaInBoth.games = fechaInBoth.games.filter(gameInBoth =>
+          systemFecha.games.find(systemGame =>
+            gameInBoth.number === systemGame.number &&
+            gameInBoth.homeTeam === systemGame.homeTeam &&
+            gameInBoth.awayTeam === systemGame.awayTeam
+          )
+        );
         fechaInBoth.games = fechaInBoth.games && fechaInBoth.games.concat(gamesMissingInFechaInBoth) || gamesMissingInFechaInBoth;
       }
 

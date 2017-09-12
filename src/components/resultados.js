@@ -24,27 +24,31 @@ class Resultados extends Component {
         console.log('user:', user.username);
         user.points = 0;
         const fechas = user.fechas.map(fecha => {
+          fecha.points = 0;
           console.log('fecha number:', fecha.number);
           const systemFecha = this.props.fechas.find(propsFecha => propsFecha.number === fecha.number);
           const games = fecha.games.map(game => {
             const systemGame = systemFecha.games.find(propsGame => propsGame.number === game.number);
             const systemGoalsHome = parseInt(systemGame.goalsHome);
             const systemGoalsAway = parseInt(systemGame.goalsAway);
-            console.log('game number:', game.number);
+            /*console.log('game number:', game.number);
             console.log('system game goals home:', systemGoalsHome);
             console.log('user game goals home:', game.goalsHome);
             console.log('system game goals away:', systemGoalsAway);
-            console.log('user game goals away:', game.goalsAway);
+            console.log('user game goals away:', game.goalsAway);*/
             const systemResult = systemGoalsHome >= systemGoalsAway ? (systemGoalsHome === systemGoalsAway ? 'tie':'home'):'away';
 
             const gameResult = game.goalsHome === '' && game.goalsAway === '' ? '' : (game.goalsHome >= game.goalsAway ? (game.goalsHome === game.goalsAway ? 'tie':'home'):'away');
 
             if(systemResult === gameResult) {
               user.points += 1;
+              fecha.points += 1;
               if(game.goalsHome !== '' && game.goalsAway !== '' && systemGoalsHome === game.goalsHome && systemGoalsAway === game.goalsAway) {
                 user.points += 2;
+                fecha.points += 2;
               }
             }
+            console.log('fecha points:', fecha.points);
             console.log('points:', user.points);
             console.log('--------------------------------------------------------------');
           });
