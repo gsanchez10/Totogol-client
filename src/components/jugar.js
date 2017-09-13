@@ -36,16 +36,31 @@ class Jugar extends Component {
 
 
 
-    const changingFecha = Object.assign({}, this.props.fechas.find(fecha => fecha.number === params.fechaNumber));
-    changingFecha.games.forEach(changedGame => {
+    const changingFecha = Object.assign({}, this.props.user.fechas.find(fecha => fecha.number === params.fechaNumber));
+    const games = changingFecha.games.map(changedGame => {
       if(changedGame.number === params.juegoNumber) {
-        changedGame.goalsHome = params.goalsHome;
-        changedGame.goalsAway = params.goalsAway;
+        return {
+          goalsHome : params.goalsHome,
+          goalsAway : params.goalsAway,
+          homeTeam : changedGame.homeTeam,
+          awayTeam : changedGame.awayTeam,
+          number : changedGame.number
+        }
+      }else {
+        return changedGame;
       }
     });
-    const fechas = [...this.props.fechas, ...changingFecha];
+    changingFecha.games = games;
+    let changedFechas = this.props.user.fechas.map(fecha => {
+      if(fecha.number === params.fechaNumber) {
+        return changingFecha;
+      }
 
-    this.props.changePlayerGoals({fechas: fechas, username: this.props.user.username });
+      return fecha;
+    });
+    changedFechas = changedFechas.filter(fecha => this.props.fechas.find(systemFecha => systemFecha.number === fecha.number));
+
+    this.props.changePlayerGoals({fechas: changedFechas, username: this.props.user.username });
   }
 
   renderError() {
