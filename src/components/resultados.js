@@ -2,6 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 
+const ResultadosComponent = (props) => {
+  const userResults = (props.users.length && props.users.map(user => <div><span>{user.username}</span><span>{user.points || 0}</span></div>));
+  return (
+    <div>
+      {userResults}
+    </div>
+  );
+}
+
 class Resultados extends Component {
   constructor(props) {
     super(props);
@@ -13,50 +22,11 @@ class Resultados extends Component {
 
   componentDidMount() {
     this.props.getFechas();
-    this.props.getPlayers();
+    //const fechas = [{"_id":"59ade758b6e2a4bdc18dec04","number":1,"closingDate":"2017-01-01T00:00:00.000Z","__v":6,"games":[{"goalsAway":"1","goalsHome":"6","number":1,"awayTeam":"Municipal Grecia","homeTeam":"Deportivo Saprissa"}]},{"_id":"59af373ffa27d9ff989c2329","number":2,"closingDate":"2017-09-05T00:00:00.000Z","__v":3,"games":[{"goalsAway":"1","goalsHome":"1","number":1,"awayTeam":"Brasil","homeTeam":"Colombia"},{"goalsAway":"1","goalsHome":"1","number":2,"awayTeam":"USA","homeTeam":"Honduras"},{"goalsAway":"1","goalsHome":"1","number":3,"awayTeam":"Mexico","homeTeam":"Costa Rica"}]},{"_id":"59b21da2e5625185bc98e410","number":3,"closingDate":"2017-09-30T19:59:00.000Z","__v":10,"games":[{"goalsAway":"0","goalsHome":"3","number":1,"awayTeam":"Anderlecht","homeTeam":"Bayern"},{"goalsAway":"0","goalsHome":"3","number":2,"awayTeam":"FC Basel","homeTeam":"Mancheser United"},{"goalsAway":"5","goalsHome":"0","number":3,"awayTeam":"Paris Saint Germain","homeTeam":"Celtic"},{"goalsAway":"0","goalsHome":"0","number":4,"awayTeam":"Atletico de Madrid","homeTeam":"Roma"},{"goalsAway":"0","goalsHome":"3","number":5,"awayTeam":"Juventus","homeTeam":"Barcelona"},{"number":6,"awayTeam":"Sevilla","homeTeam":"Liverpool"},{"number":7,"awayTeam":"Apoel FC","homeTeam":"Real Madrid"},{"number":8,"awayTeam":"Borussia Dortmund","homeTeam":"Tottenham"}]}];
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({users: nextProps.users});
-    
-    if(nextProps.users.length && nextProps.fechas) {
-      const users = nextProps.users.map(user => {
-        console.log('user:', user.username);
-        user.points = 0;
-        const fechas = user.fechas.map(fecha => {
-          fecha.points = 0;
-          console.log('fecha number:', fecha.number);
-          const systemFecha = this.props.fechas.find(propsFecha => propsFecha.number === fecha.number);
-          const games = fecha.games.map(game => {
-            const systemGame = systemFecha.games.find(propsGame => propsGame.number === game.number);
-            const systemGoalsHome = parseInt(systemGame.goalsHome);
-            const systemGoalsAway = parseInt(systemGame.goalsAway);
-            /*console.log('game number:', game.number);
-            console.log('system game goals home:', systemGoalsHome);
-            console.log('user game goals home:', game.goalsHome);
-            console.log('system game goals away:', systemGoalsAway);
-            console.log('user game goals away:', game.goalsAway);*/
-            const systemResult = systemGoalsHome >= systemGoalsAway ? (systemGoalsHome === systemGoalsAway ? 'tie':'home'):'away';
-
-            const gameResult = game.goalsHome === '' && game.goalsAway === '' ? '' : (game.goalsHome >= game.goalsAway ? (game.goalsHome === game.goalsAway ? 'tie':'home'):'away');
-
-            if(systemResult === gameResult) {
-              user.points += 1;
-              fecha.points += 1;
-              if(game.goalsHome !== '' && game.goalsAway !== '' && systemGoalsHome === game.goalsHome && systemGoalsAway === game.goalsAway) {
-                user.points += 2;
-                fecha.points += 2;
-              }
-            }
-            console.log('fecha points:', fecha.points);
-            console.log('points:', user.points);
-            console.log('--------------------------------------------------------------');
-          });
-        });
-        return user;
-      });
-      this.setState({users:users});
-    }
+    this.props.getPlayersWithPoints(nextProps.fechas);
   }
 
   renderCols(games) {
@@ -96,7 +66,7 @@ class Resultados extends Component {
     return (
       <div>
         <h1>Resultados</h1>
-        {this.renderResultados()}
+        <ResultadosComponent users={this.props.users} />
       </div>
     );
   }

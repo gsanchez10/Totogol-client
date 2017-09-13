@@ -242,3 +242,61 @@ export function changePlayerGoals(fechas) {
 			})
 	}
 }
+
+export function getPlayersWithPoints(systemFechas) {
+	return function(dispatch) {
+		axios.get(`${ROOT_URL}/getPlayers`, { headers: { 'authorization': localStorage.getItem('token') }})
+			.then(response => {
+				const users = response.data;
+				if(users.length) {
+		      users.forEach(user => {
+		      	if(user.username === 'gsanchez') {
+			        console.log('___________________________________________________________________________');
+			        console.log('user:', user.username);
+			        user.points = 0;
+			        user.fechas.forEach(fecha => {
+			          fecha.points = 0;
+			          console.log('fecha number:', fecha.number);
+			          const systemFecha = systemFechas.find(systemFecha => systemFecha.number === fecha.number);
+			          fecha.games.forEach(game => {
+			            const systemGame = systemFecha && systemFecha.games && systemFecha.games.find(propsGame => propsGame.number === game.number);
+
+			            if(systemGame) {
+				            const systemGoalsHome = parseInt(systemGame.goalsHome);
+				            const systemGoalsAway = parseInt(systemGame.goalsAway);
+
+				            const gameGoalsHome = parseInt(game.goalsHome);
+				            const gameGoalsAway = parseInt(game.goalsAway);
+
+				            const systemResult = systemGoalsHome >= systemGoalsAway ? (systemGoalsHome === systemGoalsAway ? 'tie':'home'):'away';
+				            const gameResult = game.goalsHome === '' && game.goalsAway === '' ? '' : (game.goalsHome >= game.goalsAway ? (game.goalsHome === game.goalsAway ? 'tie':'home'):'away');
+
+				            if(systemResult === gameResult) {
+				              user.points += 1;
+				              fecha.points += 1;
+				              if(game.goalsHome !== '' && game.goalsAway !== '' && systemGoalsHome === gameGoalsHome && systemGoalsAway === gameGoalsAway) {
+				                user.points += 2;
+				                fecha.points += 2;
+				              }
+				            }
+			            }
+			            
+			          });
+			          console.log('points fecha: ', fecha.points);
+			        });
+			        console.log('points user: ', user.points);
+			      }
+		        return user;
+		      });
+		    }
+
+				// If request is good...
+				dispatch({ type: 'GET_PLAYERS', payload: users });
+			})
+			.catch(() => {
+				// If request is bad...
+				// - Show an arror to the user
+				// dispatch(authError('Error obteniendo paquetes.'));
+			})
+	}
+}
