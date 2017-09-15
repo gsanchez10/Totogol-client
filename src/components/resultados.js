@@ -3,10 +3,117 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 const ResultadosComponent = (props) => {
-  const userResults = (props.users.length && props.users.map(user => <div><span>{user.username}</span><span>{user.points || 0}</span></div>));
+  const usersResults = props.fechas.map(systemFecha => {
+    const modifiedFecha = Object.assign({}, systemFecha);
+    const modifiedFechaGames = modifiedFecha.games.map(systemGame => {
+      const modifiedGame = Object.assign({}, systemGame);
+      const predictions = [];
+      props.users.forEach(user => {
+        user.fechas.forEach(userFecha => {
+          //modifiedFecha.points = 0;
+          userFecha.games.forEach(userGame => {
+            if(userGame.number === modifiedGame.number && userFecha.number === modifiedFecha.number) {
+              const prediction = {
+                username: user.username,
+                goalsHome: userGame.goalsHome,
+                goalsAway: userGame.goalsAway,
+                points: 0
+              };
+
+              const systemGoalsHome = parseInt(systemGame.goalsHome);
+              const systemGoalsAway = parseInt(systemGame.goalsAway);
+
+              const gameGoalsHome = parseInt(userGame.goalsHome);
+              const gameGoalsAway = parseInt(userGame.goalsAway);
+
+              const systemResult = systemGame.goalsHome && systemGame.goalsAway && (systemGoalsHome >= systemGoalsAway ? (systemGoalsHome === systemGoalsAway ? 'tie':'home'):'away') || '';
+              const gameResult = userGame.goalsHome === '' && userGame.goalsAway === '' ? '' : (userGame.goalsHome >= userGame.goalsAway ? (userGame.goalsHome === userGame.goalsAway ? 'tie':'home'):'away');
+
+              if(systemResult === gameResult) {
+                prediction.points += 1;
+                //modifiedFecha.points += 1;
+                if(userGame.goalsHome !== '' && userGame.goalsAway !== '' && systemGoalsHome === gameGoalsHome && systemGoalsAway === gameGoalsAway) {
+                  prediction.points += 2;
+                  //modifiedFecha.points += 2;
+                }
+              }
+
+              predictions.push(prediction);
+            }
+          });
+        });
+      });
+      modifiedGame.predictions = predictions;
+      return modifiedGame;
+    });
+    modifiedFecha.games = modifiedFechaGames;
+
+    return modifiedFecha;
+  });
+
+  const renderResults = <div>
+    {
+      usersResults.map(fecha => {
+        const usernames = fecha.games[0].predictions.map(prediction => <th key={prediction.username}>{prediction.username}</th>);
+        const tableRowsHead = (
+          <tr>
+            <th>Partido</th>
+            <th>Marcador final</th>
+            {usernames}
+          </tr>
+        );
+          
+        const tableRowsBody = fecha.games.map(game => {
+          const usersPredictions = game.predictions.map(prediction => <td key={prediction.username + '-' + fecha.number + '-' + game.number}>{prediction.goalsHome} - {prediction.goalsAway}</td>);
+          return (<tr key={game.homeTeam + '-' + game.awayTeam}>
+            <td>{game.homeTeam} vs {game.awayTeam}</td>
+            <td>{game.goalsHome} - {game.goalsAway}</td>
+            {usersPredictions}
+          </tr>);
+        });
+
+        const points = {};
+        fecha.games.forEach(game => {
+          game.predictions.map(prediction => {
+            points[prediction.username] = points[prediction.username] && points[prediction.username] + prediction.points || prediction.points;
+          });
+        });
+
+        const usersTotalPoints = Object.keys(points) && Object.keys(points).map(username => {
+          return <td key={'points-' + username}>{points[username] || 0}</td>
+        });
+
+        const tableRowsFooter = (
+          <tr>
+            <td>Total Points</td>
+            <td></td>
+            {usersTotalPoints}
+          </tr>
+        );
+
+        return (
+          <div key={fecha.number}>
+            <h2>Fecha {fecha.number}</h2>
+            <table className="table">
+              <thead>
+                {tableRowsHead}
+              </thead>
+              <tbody>
+                {tableRowsBody}
+              </tbody>
+              <tfoot>
+                {tableRowsFooter}
+              </tfoot>
+            </table>
+          </div>
+        );
+      })
+    }
+  </div>;
+
   return (
     <div>
-      {userResults}
+      {renderResults}
     </div>
   );
 }
@@ -26,7 +133,9 @@ class Resultados extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.props.getPlayersWithPoints(nextProps.fechas);
+    if(this.props.fechas !== nextProps.fechas) {
+      this.props.getPlayersWithPoints(nextProps.fechas);
+    }
   }
 
   renderCols(games) {
@@ -66,7 +175,7 @@ class Resultados extends Component {
     return (
       <div>
         <h1>Resultados</h1>
-        <ResultadosComponent users={this.props.users} />
+        <ResultadosComponent users={this.props.users} fechas={this.props.fechas} />
       </div>
     );
   }

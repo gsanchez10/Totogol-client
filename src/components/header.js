@@ -14,10 +14,6 @@ class Header extends Component {
 		this.props.signoutUser();
 	}
 
-	componentWillReceiveProps(nextProps) {
-		console.log(nextProps, 'nextProps');
-	}
-
 	renderLinks() {
 		if(this.props.isAuthenticated) {
 			const editor = this.props.user && this.props.user.canAdmin && <li className="nav-item">

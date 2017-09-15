@@ -251,12 +251,9 @@ export function getPlayersWithPoints(systemFechas) {
 				if(users.length) {
 		      users.forEach(user => {
 		      	if(user.username === 'gsanchez') {
-			        console.log('___________________________________________________________________________');
-			        console.log('user:', user.username);
 			        user.points = 0;
 			        user.fechas.forEach(fecha => {
 			          fecha.points = 0;
-			          console.log('fecha number:', fecha.number);
 			          const systemFecha = systemFechas.find(systemFecha => systemFecha.number === fecha.number);
 			          fecha.games.forEach(game => {
 			            const systemGame = systemFecha && systemFecha.games && systemFecha.games.find(propsGame => propsGame.number === game.number);
@@ -282,9 +279,7 @@ export function getPlayersWithPoints(systemFechas) {
 			            }
 			            
 			          });
-			          console.log('points fecha: ', fecha.points);
 			        });
-			        console.log('points user: ', user.points);
 			      }
 		        return user;
 		      });
