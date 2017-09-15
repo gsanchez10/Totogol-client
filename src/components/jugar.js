@@ -105,7 +105,7 @@ class Jugar extends Component {
 
     const mergedFechas = systemFechas.map(systemFecha => {
       const modifiedFecha = Object.assign({}, systemFecha);
-      const userFecha = userFechas.find(userFecha => userFecha.number === modifiedFecha.number);
+      const userFecha = userFechas && userFechas.find(userFecha => userFecha.number === modifiedFecha.number);
       const modifiedFechaGames = modifiedFecha.games.map(modifiedFechaGame => {
         const modifiedGame = Object.assign({}, modifiedFechaGame);
         if(userFecha) {
