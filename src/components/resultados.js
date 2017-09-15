@@ -51,6 +51,7 @@ const ResultadosComponent = (props) => {
     return modifiedFecha;
   });
 
+  const totalPoints = {};
   const renderResults = <div>
     {
       usersResults.map(fecha => {
@@ -78,6 +79,7 @@ const ResultadosComponent = (props) => {
             points[prediction.username] = points[prediction.username] && points[prediction.username] + prediction.points || prediction.points;
           });
         });
+        totalPoints[fecha.number] = points;
 
         const usersTotalPoints = Object.keys(points) && Object.keys(points).map(username => {
           return <td key={'points-' + username}>{points[username] || 0}</td>
@@ -85,7 +87,7 @@ const ResultadosComponent = (props) => {
 
         const tableRowsFooter = (
           <tr>
-            <td>Total Points</td>
+            <td>Puntos totals</td>
             <td></td>
             {usersTotalPoints}
           </tr>
@@ -111,9 +113,68 @@ const ResultadosComponent = (props) => {
     }
   </div>;
 
+  let usersWithPoints = [];
+  Object.keys(totalPoints).forEach(fechaNumber => {
+    Object.keys(totalPoints[fechaNumber]).forEach(username => {
+      let user = usersWithPoints.find(u => u.username === username);
+      if(user) {
+        user.fechas.push({ number: fechaNumber, points: totalPoints[fechaNumber][username]});
+        user.totalPoints += totalPoints[fechaNumber][username];
+      }else {
+        user = {
+          username: username,
+          fechas: [
+            {
+              number: fechaNumber,
+              points: totalPoints[fechaNumber][username]
+            }
+          ],
+          totalPoints: totalPoints[fechaNumber][username]
+        };
+        usersWithPoints.push(user);
+      }
+    });
+  });
+
+  usersWithPoints.sort((a, b) => a.totalPoints < b.totalPoints);
+
+  const pointsTableThs = usersWithPoints &&
+  usersWithPoints[0] &&
+  usersWithPoints[0].fechas.map(fecha => <th key={'th-'+fecha.number}>Fecha {fecha.number}</th>);
+
+  const pointsTableTrs = usersWithPoints &&
+  usersWithPoints.map(user => {
+    return (
+      <tr key={user.username}>
+        <td>{user.username}</td>
+        {user.fechas && user.fechas.map(fecha => <td key={user.username + '-' + fecha.number}>{fecha.points}</td>)}
+        <td>{user.totalPoints}</td>
+      </tr>
+    );
+  });
+  
+  const totalsTable = (
+    <div className="totalsTable">
+      <h2>Tabla General de Posiciones</h2>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Usuario</th>
+            {pointsTableThs}
+            <th>Puntos totals</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pointsTableTrs}
+        </tbody>
+      </table>
+    </div>
+  );
+
   return (
     <div>
       {renderResults}
+      {totalsTable}
     </div>
   );
 }
