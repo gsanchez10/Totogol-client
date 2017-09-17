@@ -9,7 +9,7 @@ export default class App extends Component {
       <div className="main">
       	<Header />
         <div className="wrapper">
-        	<div className="container">
+        	<div className="container-fluid">
         		{this.props.children}
         	</div>
         </div>

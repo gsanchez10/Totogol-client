@@ -5,7 +5,7 @@
   min-height: 100vh;
 }
 
-.container {
+.container-fluid {
   max-width: 500px;
 }
 
@@ -94,6 +94,10 @@ footer {
   padding-bottom: 15px;
 }
 
+.nav>li {
+  display: inline-block;
+}
+
 .navbar-default {
   border: 0;
 }
@@ -139,4 +143,21 @@ footer {
 
 .cuenta ul li {
   list-style: none;
+}
+
+.resultados-component {
+  overflow: auto;
+}
+
+@media (max-width: 667px) {
+  .container-fluid {
+    max-width: initial;
+  }
+  .homeTeamName {
+    min-width: initial;
+    width: 45%;
+  }
+  .goalsInput {
+    width: 24px;
+  }
 }

@@ -55,7 +55,7 @@ const ResultadosComponent = (props) => {
   const renderResults = <div>
     {
       usersResults.map(fecha => {
-        const usernames = fecha.games[0].predictions.map(prediction => <th key={prediction.username}>{prediction.username}</th>);
+        const usernames = fecha.games[0].predictions.map(prediction => <th key={prediction.username}><div>{prediction.username}</div></th>);
         const tableRowsHead = (
           <tr>
             <th>Partido</th>
@@ -87,7 +87,7 @@ const ResultadosComponent = (props) => {
 
         const tableRowsFooter = (
           <tr>
-            <td>Puntos totals</td>
+            <td>Puntos totales</td>
             <td></td>
             {usersTotalPoints}
           </tr>
@@ -161,7 +161,7 @@ const ResultadosComponent = (props) => {
           <tr>
             <th>Usuario</th>
             {pointsTableThs}
-            <th>Puntos totals</th>
+            <th>Puntos totales</th>
           </tr>
         </thead>
         <tbody>
@@ -172,7 +172,7 @@ const ResultadosComponent = (props) => {
   );
 
   return (
-    <div>
+    <div className="resultados-component">
       {renderResults}
       {totalsTable}
     </div>
