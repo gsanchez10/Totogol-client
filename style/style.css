@@ -157,6 +157,10 @@ footer {
   background: rgba(0,0,0,0.6);
 }
 
+.totalsTable {
+  background: rgba(0,0,0,0.6);
+}
+
 @media (max-width: 667px) {
   .container-fluid {
     max-width: initial;
