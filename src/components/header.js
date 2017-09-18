@@ -4,19 +4,10 @@ import classnames from 'classnames';
 import { Link } from 'react-router';
 import * as actions from '../actions';
 
-
-class Header extends Component {
-	componentDidMount() {
-    this.props.userInfo();
-  }
-
-	signoutUser() {
-		this.props.signoutUser();
-	}
-
-	renderLinks() {
-		if(this.props.isAuthenticated) {
-			const editor = this.props.user && this.props.user.canAdmin && <li className="nav-item">
+const HeaderComponent = (props) => {
+	function renderLinks() {
+		if(props.isAuthenticated) {
+			const editor = props.user && props.user.canAdmin && <li className="nav-item">
 						<Link to="/editor" className={classnames({ 'nav-active': location.pathname === '/editor' })}>Editor</Link>
 					</li>;
 			return (
@@ -32,7 +23,7 @@ class Header extends Component {
 						<Link to="/resultados" className={classnames({ 'nav-active': location.pathname === '/resultados' })}>Resultados</Link>
 					</li>
 					<li className="nav-item">
-						<button onClick={this.signoutUser.bind(this)}>Salir</button>
+						<button onClick={props.signoutUser}>Salir</button>
 					</li>
 				</ul>
 			);
@@ -49,21 +40,38 @@ class Header extends Component {
 			</ul>
 		);
 	}
+	return (
+		<div>
+			<nav className="navbar navbar-default" >
+				<nav className="navbar navbar-inverse">
+			    <div className="navbar-header">
+						<a className="navbar-brand" href="#">TOTOGOL</a>
+					</div>
+					<div className="profile">
+						{props.user && props.user.username}
+					</div>
+				</nav>
+				{renderLinks()}
+			</nav>
+		</div>
+	);
+}
+
+class Header extends Component {
+	componentDidMount() {
+		if(this.props.isAuthenticated) {
+   		this.props.userInfo();
+		}
+  }
+
+	signoutUser() {
+		this.props.signoutUser();
+	}
 
 	render() {
 		return (
 			<div>
-				<nav className="navbar navbar-default" >
-					<nav className="navbar navbar-inverse">
-				    <div className="navbar-header">
-							<a className="navbar-brand" href="#">TOTOGOL</a>
-						</div>
-						<div className="profile">
-							{this.props.user && this.props.user.username}
-						</div>
-					</nav>
-					{this.renderLinks()}
-				</nav>
+				<HeaderComponent {...this.props} signoutUser={this.props.signoutUser.bind(this)} />
 			</div>
 		);
 	}
