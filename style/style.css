@@ -45,6 +45,9 @@ footer {
 
 .fecha {
   position: relative;
+  background: rgba(0, 0, 0, 0.63);
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .fecha .closingDate {
@@ -69,7 +72,7 @@ footer {
 }
 
 .homeTeamName {
-  min-width: 250px;
+  width: 45%;
   display: inline-block;
   text-align: right;
 }
@@ -149,13 +152,13 @@ footer {
   overflow: auto;
 }
 
+.puntosFecha {
+  background: rgba(0,0,0,0.6);
+}
+
 @media (max-width: 667px) {
   .container-fluid {
     max-width: initial;
-  }
-  .homeTeamName {
-    min-width: initial;
-    width: 45%;
   }
   .goalsInput {
     width: 24px;

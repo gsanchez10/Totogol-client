@@ -94,7 +94,7 @@ const ResultadosComponent = (props) => {
         );
 
         return (
-          <div key={fecha.number}>
+          <div key={fecha.number} className="puntosFecha">
             <h2>Fecha {fecha.number}</h2>
             <table className="table">
               <thead>
