@@ -51,9 +51,9 @@ export function signoutUser() {
 	}
 }
 
-export function signupUser({ email, password }) {
+export function signupUser({ email, username, password }) {
 	return function(dispatch) {
-		axios.post(`${ROOT_URL}/signup`, { email, password })
+		axios.post(`${ROOT_URL}/signup`, { email, username, password })
 			// Submit email/password to the server
 			.then(response => {
 				// If request is good...

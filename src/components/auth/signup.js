@@ -4,8 +4,8 @@ import { Field, reduxForm  } from 'redux-form';
 import * as actions from '../../actions';
 
 class Signup extends Component {
-  handleFormSubmit({ email, password }) {
-    this.props.signupUser({ email, password });
+  handleFormSubmit({ email, username, password }) {
+    this.props.signupUser({ email, username, password });
   }
 
   renderAlert() {
@@ -30,6 +30,10 @@ class Signup extends Component {
             <Field name="email" component="input" type="text" className="form-control"/>
           </fieldset>
           <fieldset className="form-group">
+            <label>Usuario:</label>
+            <Field name="username" component="input" type="text" className="form-control"/>
+          </fieldset>
+          <fieldset className="form-group">
             <label>Contraseña:</label>
             <Field name="password" component="input" type="password" className="form-control"/>
           </fieldset>
@@ -47,7 +51,7 @@ function mapStateToProps(state) {
 
 const reduxFormSignup = reduxForm({
   form: 'signin',
-  fields: ['email', 'password']
+  fields: ['email', 'username', 'password']
 })(Signup);
 
 export default connect(mapStateToProps, actions)(reduxFormSignup);
